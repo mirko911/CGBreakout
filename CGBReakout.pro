@@ -25,9 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 include(../../Common.pri)
 
 SOURCES += \
-        game.cpp
+        game.cpp \
+    Brick.cpp
 
-HEADERS +=
+HEADERS += \
+    Brick.h
 
 FORMS += \
     dockwidget.ui

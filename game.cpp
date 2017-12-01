@@ -9,6 +9,11 @@
 
 #include "ui_dockwidget.h"
 
+#include <vector>
+#include "Brick.h"
+#include "transformation.h"
+#include "simplesphere.h"
+
 Node *initScene1();
 
 void SceneManager::initScenes()
@@ -37,5 +42,23 @@ void SceneManager::initScenes()
 
 Node *initScene1()
 {
-    return new Node();
+	std::vector<Brick *> bricks;
+	bricks.reserve(30);
+
+	Node * mainNode = new Node();
+
+    Drawable * centerPoint = new Drawable(new SimpleSphere(1));
+    Node * centerPointNode = new Node(centerPoint);
+    mainNode->addChild(centerPointNode);
+
+
+    for (unsigned i = 0; i < 10; i++) {
+        for (unsigned j = 0; j < 6; j++) {
+            Brick * brick = new Brick(2, 1, 1, QVector3D(i * 3, j * 3, 0));
+			bricks.push_back(brick);
+            mainNode->addChild(brick->getNode());
+		}
+	}
+
+    return mainNode;
 }
