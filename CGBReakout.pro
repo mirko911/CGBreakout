@@ -25,9 +25,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 include(../../Common.pri)
 
 SOURCES += \
-        game.cpp \
     Brick.cpp \
-    Ball.cpp
+    Ball.cpp \
+    main.cpp
 
 HEADERS += \
     Brick.h \
