@@ -27,11 +27,13 @@ include(../../Common.pri)
 SOURCES += \
     Brick.cpp \
     Ball.cpp \
-    main.cpp
+    main.cpp \
+    GameObject.cpp
 
 HEADERS += \
     Brick.h \
-    Ball.h
+    Ball.h \
+    GameObject.h
 
 FORMS += \
     dockwidget.ui
