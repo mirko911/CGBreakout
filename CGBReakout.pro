@@ -28,12 +28,14 @@ SOURCES += \
     Brick.cpp \
     Ball.cpp \
     main.cpp \
-    GameObject.cpp
+    GameObject.cpp \
+    Platform.cpp
 
 HEADERS += \
     Brick.h \
     Ball.h \
-    GameObject.h
+    GameObject.h \
+    Platform.h
 
 FORMS += \
     dockwidget.ui

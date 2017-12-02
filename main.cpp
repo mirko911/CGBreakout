@@ -4,25 +4,47 @@
 #include "scenemanager.h"
 #include "transformation.h"
 #include "keyboardtransformation.h"
-#include "controllablecamera.h"
+#include "camera.h"
 #include "color.h"
-
+#include "controllablecamera.h"
 #include "ui_dockwidget.h"
 
 #include <vector>
 #include "Brick.h"
 #include "Ball.h"
+#include "Platform.h"
 
 #include "simplesphere.h"
 
 Node *initScene1();
+
+class TestCam :
+    public ControllableCamera
+{
+    public:
+    void doIt(){
+        ControllableCamera::doIt();
+        KeyboardInput* keyIn = InputRegistry::getInstance().getKeyboardInput();
+        if (keyIn->isKeyPressed('l'))
+        {
+            //Breakpoint Debugging here
+            int x = 5;
+            x++;
+        }
+
+    };
+};
 
 void SceneManager::initScenes()
 {
 	Ui_FPSWidget *lDock;
 	QDockWidget *lDockWidget = new QDockWidget(QString("FPS"), SceneManager::getMainWindow());
 
-	ControllableCamera *cam = new ControllableCamera();
+    TestCam *cam = new TestCam();
+    //cam->setPosition(QVector3D(14, 0, 60));
+	//cam->setEyePosition(QVector3D(14, 0, 60));
+    //QVector3D position = cam->getPosition();
+    //std::cout << position.x() << " " << position.y() << " " << position.z() << std::endl;
 	RenderingContext *myContext = new RenderingContext(cam);
 	unsigned int myContextNr = SceneManager::instance()->addContext(myContext);
 	unsigned int myScene = SceneManager::instance()->addScene(initScene1());
@@ -51,6 +73,9 @@ Node *initScene1()
 
 	Ball * ball = new Ball(1, QVector3D(0, 0, 0));
 	mainNode->addChild(ball->getNode());
+
+    Platform * platform = new Platform(3, 1, 1, QVector3D(0, 0, 0));
+	mainNode->addChild(platform->getNode());
 
 	for (unsigned i = 0; i < 10; i++) {
 		for (unsigned j = 0; j < 6; j++) {
