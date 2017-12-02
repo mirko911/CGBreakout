@@ -1,6 +1,5 @@
 #ifndef BRICK_H
-	#define BRICK_H
-#endif // !BRICK_H
+#define BRICK_H
 
 #include <qwidget.h>
 
@@ -40,3 +39,4 @@ public:
 	Node* getNode();
 };
 
+#endif // !BRICK_H

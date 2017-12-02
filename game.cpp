@@ -11,7 +11,8 @@
 
 #include <vector>
 #include "Brick.h"
-#include "transformation.h"
+#include "Ball.h"
+
 #include "simplesphere.h"
 
 Node *initScene1();
@@ -47,14 +48,14 @@ Node *initScene1()
 
 	Node * mainNode = new Node();
 
-    Drawable * centerPoint = new Drawable(new SimpleSphere(1));
-    Node * centerPointNode = new Node(centerPoint);
-    mainNode->addChild(centerPointNode);
 
+    Ball * ball = new Ball(1, QVector3D(0,0,0));
+    mainNode->addChild(ball->getNode());
 
     for (unsigned i = 0; i < 10; i++) {
         for (unsigned j = 0; j < 6; j++) {
-            Brick * brick = new Brick(2, 1, 1, QVector3D(i * 3, j * 3, 0));
+			Brick * brick = new Brick(2, 1, 1, QVector3D(i * 3, j * 3, 0));
+			brick->getProperty<Color>()->setValue(0, 255, 255);
 			bricks.push_back(brick);
             mainNode->addChild(brick->getNode());
 		}

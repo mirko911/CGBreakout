@@ -3,9 +3,9 @@
 
 Brick::Brick(const float width, const float height, const float depth, const QVector3D position) :
 	width(width), height(height), depth(depth), health(100),
-	isVisible(true), position(position), node(new Node(this)), Drawable(new SimpleCube(width, height, depth)) 
+	isVisible(true), position(position), transformation(new Transformation),
+	node(new Node(this)), Drawable(new SimpleCube(width, height, depth)) 
 {
-	transformation = new Transformation();
 	setPosition(position);
 }
 
