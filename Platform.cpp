@@ -18,5 +18,6 @@ void Platform::doIt()
 		position.setX(position.x() + 0.05);
 	}
 	setPosition(position);
+    std::cout << position.x() << " " << position.y() << std::endl;
 }
 

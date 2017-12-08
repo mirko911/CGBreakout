@@ -15,6 +15,7 @@
 #include "Platform.h"
 #include "FixedCamera.h"
 
+#include "window.h"
 #include "simplesphere.h"
 
 Node *initScene1();
@@ -38,8 +39,6 @@ void SceneManager::initScenes()
 
 Node *initScene1()
 {
-
-
     std::vector<Brick *> bricks;
     bricks.reserve(30);
 
@@ -54,28 +53,47 @@ Node *initScene1()
     Node * centerNode = new Node(centerBall);
     mainNode->addChild(centerNode);
 
-    Platform * platform = new Platform(3, 1, 1, QVector3D(0, 0, 0));
+
+
+    Platform * platform = new Platform(0.1f, 0.1f, 1, QVector3D(0, 0, 0));
     mainNode->addChild(platform->getNode());
 
+    Color* color;
 
-    for (unsigned j = 0; j < 10; j++) {
-        for (unsigned i = 0; i < 22; i++) {
-            Brick * brick = new Brick(2, 1, 1, QVector3D(0 + i * 3, 30 + j * 2, 0));
+    int width = 90; //estimated value
+    int height = 56; //estimated value
+
+    //@todo move the complete brick generation to extra function?
+    int brick_width = 4;
+    int brick_height = 2;
+    int brick_offset_x = 2;
+    int brick_offset_y = 2;
+    int brick_amount_x = 14;
+    int brick_amount_y = 10;
+
+    int center_x = width / 2;
+    int center_y = height / 2;
+    int offset_center_x = center_x - (brick_amount_x / 2 * (brick_width + brick_offset_x)) + 2; //the bricks should be centered
+
+    int x_position;
+    int y_position;
+
+
+    for (unsigned j = 0; j < brick_amount_y; j++) {
+        for (unsigned i = 0; i < brick_amount_x; i++) {
+
+            x_position = offset_center_x + (i * brick_width) + (i * brick_offset_x);
+            y_position = center_y + (j * brick_height) + (j * brick_offset_y);
+
+            Brick * brick = new Brick(4, 2, 2, QVector3D(x_position, y_position, 0));
+            color = brick->getProperty<Color>();
+            color->setValue(1.0f, 1.0f * (1.f - (float)j/(brick_amount_y -1.f)),0); //Color gradient yellow to red
             bricks.push_back(brick);
             mainNode->addChild(brick->getNode());
         }
     }
 
-    /*
-    for (unsigned i = 0; i < 10; i++) {
-        for (unsigned j = 0; j < 6; j++) {
-            Brick * brick = new Brick(2, 1, 1, QVector3D(i * 3, j * 3, 0));
-            brick->getProperty<Color>()->setValue(0, 255, 255);
-            bricks.push_back(brick);
-            mainNode->addChild(brick->getNode());
-        }
-    }
-    */
+
 
     return mainNode;
 }
