@@ -11,13 +11,25 @@ void Platform::doIt()
 {
 	KeyboardInput *keyboard_input = InputRegistry::getInstance().getKeyboardInput();
 
-	if (keyboard_input->isKeyPressed('h')) {
-		position.setX(position.x() - 0.05);
+	if (keyboard_input->isKeyPressed('a')) {
+		position.setX(position.x() - velocity);
+		std::cout << position.x() << " " << position.y() << std::endl;
 	}
-	else if (keyboard_input->isKeyPressed('j')) {
-		position.setX(position.x() + 0.05);
+	else if (keyboard_input->isKeyPressed('d')) {
+		position.setX(position.x() + velocity);
+		std::cout << position.x() << " " << position.y() << std::endl;
 	}
+
 	setPosition(position);
-    std::cout << position.x() << " " << position.y() << std::endl;
+}
+
+void Platform::setVelocity(const float _velocity)
+{
+	velocity = _velocity;
+}
+
+float Platform::getVelocity() const
+{
+	return velocity;
 }
 

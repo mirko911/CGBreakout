@@ -17,9 +17,12 @@ private:
 	float width;
 	float height;
 	float depth;
+    float velocity = 0.2f;
 public:
 	Platform(const float width, const float height, const float depth, const QVector3D position);
 	virtual void doIt() override;
+    void setVelocity(const float _velocity);
+    float getVelocity() const;
 };
 
 #endif // !PLATFORM_H

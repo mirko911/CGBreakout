@@ -39,8 +39,8 @@ void SceneManager::initScenes()
 
 Node *initScene1()
 {
-    std::vector<Brick *> bricks;
-    bricks.reserve(30);
+    int width = 90; //estimated value
+    int height = 56; //estimated value
 
     Node * mainNode = new Node();
 
@@ -53,15 +53,9 @@ Node *initScene1()
     Node * centerNode = new Node(centerBall);
     mainNode->addChild(centerNode);
 
-
-
-    Platform * platform = new Platform(0.1f, 0.1f, 1, QVector3D(0, 0, 0));
+    Platform * platform = new Platform(10, 1, 1, QVector3D(width/2, 1, 0));
     mainNode->addChild(platform->getNode());
 
-    Color* color;
-
-    int width = 90; //estimated value
-    int height = 56; //estimated value
 
     //@todo move the complete brick generation to extra function?
     int brick_width = 4;
@@ -78,7 +72,10 @@ Node *initScene1()
     int x_position;
     int y_position;
 
+    std::vector<Brick *> bricks;
+    bricks.reserve(brick_amount_x * brick_amount_y);
 
+    Color* color;
     for (unsigned j = 0; j < brick_amount_y; j++) {
         for (unsigned i = 0; i < brick_amount_x; i++) {
 
