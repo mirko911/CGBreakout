@@ -1,14 +1,11 @@
 #ifndef BALL_H
 #define BALL_H
 
-#include <qwidget.h>
-
-#include "idleobserver.h"
 #include "simplesphere.h"
 
 #include "GameObject.h"
 
-class Ball : public GameObject, public IdleObserver
+class Ball : public GameObject
 {
 private:
 	float radius;
@@ -16,8 +13,9 @@ private:
     QVector3D direction;
 public:
 	Ball(const float radius, const QVector3D position, const QVector3D direction);
-	virtual void doIt() override;
-    QVector3D hit(QVector3D vec, QVector3D dir);
+    QVector3D hit(const QVector3D dir) const;
+	QVector3D getDirection() const;
+	void setDirection(const QVector3D _direction);
 };
 
 #endif // !BALL_H

@@ -11,14 +11,16 @@ GameObject::GameObject(const QVector3D position, Geometry * geometry) : Drawable
 }
 
 
-void GameObject::setPosition(const QVector3D position)
+void GameObject::setPosition(const QVector3D _position)
 {
+	position = _position;
 	transformation->resetTrafo();
-	transformation->translate(position.x(), position.y(), position.z());
+	transformation->translate(_position.x(), _position.y(), _position.z());
 }
 
 void GameObject::setPosition(const float x, const float y, const float z)
 {
+	position = QVector3D(x,y,z);
 	transformation->resetTrafo();
 	transformation->translate(x, y, z);
 }

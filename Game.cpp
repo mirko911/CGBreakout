@@ -32,7 +32,7 @@ Node * Game::initGameScene()
 	for (int j = 0; j < settings.num_bricks_y; j++) {
 		for (int i = 0; i < settings.num_bricks_x; i++) {
 			x_position = offset_center_x + (i * brick_width_with_offset);
-			y_position = center.y() + (j * brick_height_with_offset);
+			y_position = center.y() - 10 + (j * brick_height_with_offset);
 
 			Brick * brick = new Brick(
 				settings.brick_width, settings.brick_height, settings.brick_depth,
@@ -64,10 +64,25 @@ Node * Game::initEndScene()
 
 void Game::doIt()
 {
-	if (keyboard_input->isKeyPressed('a')) {
+	//Calculate new ball positions
+	for (Ball * ball : balls) {
+        QVector3D newPosition = (ball->getPosition() + ball->getDirection() * 0.05);
+
+		if (newPosition.x() < 0 || newPosition.x() > settings.width) {
+            ball->setDirection(ball->hit(QVector3D(0, 1, 0)));
+		}
+        else if (newPosition.y() < 0 || newPosition.y() > settings.height) {
+            ball->setDirection(ball->hit(QVector3D(1, 0, 0)));
+		}
+		else {
+			ball->setPosition(newPosition);
+		}
+	}
+
+    if (keyboard_input->isKeyPressed('a') && platform->getPosition().x() > 0) {
 		platform->moveLeft();
 	}
-	else if (keyboard_input->isKeyPressed('d')) {
+    else if (keyboard_input->isKeyPressed('d') && platform->getPosition().x() < settings.width) {
 		platform->moveRight();
 	}
 

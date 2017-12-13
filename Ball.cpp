@@ -7,20 +7,18 @@ radius(radius), direction(direction)
 	setPosition(position);
 }
 
-
-void Ball::doIt()
+QVector3D Ball::hit(const QVector3D vec) const
 {
-	position.setX(position.x() + direction.x() * 0.05);
-	position.setY(position.y() + direction.y() * 0.05);
-	setPosition(position);
-	if (position.x() < 0 || position.x() > 86)
-		direction = hit(direction, QVector3D(0, 1, 0));
-	if (position.y() > 70)
-		direction = hit(direction, QVector3D(1, 0, 0));
+	return -(direction - (vec * (2 * (QVector3D::dotProduct(direction, vec)))));
 }
 
-QVector3D Ball::hit(QVector3D dir, QVector3D vec)
+QVector3D Ball::getDirection() const
 {
-	return -(dir - (vec * (2 * (QVector3D::dotProduct(dir, vec)))));
+	return direction;
+}
+
+void Ball::setDirection(const QVector3D _direction)
+{
+	direction = _direction;
 }
 

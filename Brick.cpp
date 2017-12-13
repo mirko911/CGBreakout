@@ -6,5 +6,5 @@ Brick::Brick(const float width, const float height, const float depth, const QVe
 	width(width), height(height), depth(depth), health(100),
 	isVisible(true)
 {
-	setPosition(position);
+    setPosition(position);
 }

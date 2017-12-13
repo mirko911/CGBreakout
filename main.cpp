@@ -27,7 +27,7 @@ void SceneManager::initScenes()
 {
 	Settings settings;
 	settings.width = 90;
-	settings.height = 56;
+	settings.height = 70;
 	settings.brick_height = 2;
 	settings.brick_width = 4;
 	settings.brick_depth = 2;
