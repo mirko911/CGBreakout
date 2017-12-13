@@ -14,7 +14,7 @@ Node * Game::initGameScene()
 {
 	Node * mainNode = new Node();
 
-	Ball * ball =  new Ball(1, QVector3D(0, 0, 0));
+        Ball * ball = new Ball(1, QVector3D(3, 3, 0), QVector3D(0,1,0));
 	mainNode->addChild(ball->getNode());
 	balls.push_back(ball);
 
