@@ -30,14 +30,16 @@ SOURCES += \
     main.cpp \
     GameObject.cpp \
     Platform.cpp \
-    FixedCamera.cpp
+    FixedCamera.cpp \
+    Game.cpp
 
 HEADERS += \
     Brick.h \
     Ball.h \
     GameObject.h \
     Platform.h \
-    FixedCamera.h
+    FixedCamera.h \
+    Game.h
 
 FORMS += \
     dockwidget.ui

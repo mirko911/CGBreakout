@@ -7,22 +7,6 @@ Platform::Platform(const float width, const float height, const float depth, con
 {
 }
 
-void Platform::doIt()
-{
-	KeyboardInput *keyboard_input = InputRegistry::getInstance().getKeyboardInput();
-
-	if (keyboard_input->isKeyPressed('a')) {
-		position.setX(position.x() - velocity);
-		std::cout << position.x() << " " << position.y() << std::endl;
-	}
-	else if (keyboard_input->isKeyPressed('d')) {
-		position.setX(position.x() + velocity);
-		std::cout << position.x() << " " << position.y() << std::endl;
-	}
-
-	setPosition(position);
-}
-
 void Platform::setVelocity(const float _velocity)
 {
 	velocity = _velocity;
@@ -31,5 +15,17 @@ void Platform::setVelocity(const float _velocity)
 float Platform::getVelocity() const
 {
 	return velocity;
+}
+
+void Platform::moveLeft()
+{
+	position.setX(position.x() - velocity);
+	setPosition(position);
+}
+
+void Platform::moveRight()
+{
+	position.setX(position.x() + velocity);
+	setPosition(position);
 }
 

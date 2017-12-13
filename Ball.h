@@ -12,6 +12,7 @@ class Ball : public GameObject, public IdleObserver
 {
 private:
 	float radius;
+    QVector3D velocity;
 public:
 	Ball(const float radius, const QVector3D position);
 	virtual void doIt() override;

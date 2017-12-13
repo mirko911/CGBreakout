@@ -5,13 +5,11 @@
 #include "GameObject.h"
 
 #include "simplecube.h"
-#include "inputregistry.h"
-#include "idleobserver.h"
 
 #include <iostream>
 
 class Platform :
-	public GameObject, IdleObserver
+	public GameObject
 {
 private:
 	float width;
@@ -20,9 +18,10 @@ private:
     float velocity = 0.2f;
 public:
 	Platform(const float width, const float height, const float depth, const QVector3D position);
-	virtual void doIt() override;
     void setVelocity(const float _velocity);
     float getVelocity() const;
+	void moveLeft();
+	void moveRight();
 };
 
 #endif // !PLATFORM_H

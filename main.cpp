@@ -18,79 +18,38 @@
 #include "window.h"
 #include "simplesphere.h"
 
+#include "Game.h"
+
 Node *initScene1();
 
 
 void SceneManager::initScenes()
 {
+	Settings settings;
+	settings.width = 90;
+	settings.height = 56;
+	settings.brick_height = 2;
+	settings.brick_width = 4;
+	settings.brick_depth = 2;
+	settings.num_bricks_x = 14;
+	settings.num_bricks_y = 10;
+	settings.brick_offset_x = 2;
+	settings.brick_offset_y = 2;
+	settings.start_lives = 3;
+
+    Game * game = new Game(settings);
+
     FixedCamera *cam = new FixedCamera();
     RenderingContext *myContext = new RenderingContext(cam);
 
     unsigned int myContextNr = SceneManager::instance()->addContext(myContext);
-    unsigned int myScene = SceneManager::instance()->addScene(initScene1());
+    unsigned int myScene = SceneManager::instance()->addScene(game->initGameScene());
     ScreenRenderer *myRenderer = new ScreenRenderer(myContextNr, myScene);
 
     //Vorsicht: Die Szene muss initialisiert sein, bevor das Fenster verändert wird (Fullscreen)
     SceneManager::instance()->setActiveScene(myScene);
     SceneManager::instance()->setActiveContext(myContextNr);
     SceneManager::instance()->getActiveContext()->setCamera(cam);
+
     //SceneManager::instance()->setFullScreen();
-}
-
-Node *initScene1()
-{
-    int width = 90; //estimated value
-    int height = 56; //estimated value
-
-    Node * mainNode = new Node();
-
-
-    Ball * ball = new Ball(1, QVector3D(0, 0, 0));
-    mainNode->addChild(ball->getNode());
-
-
-    Drawable * centerBall = new Drawable(new SimpleSphere(0.1));
-    Node * centerNode = new Node(centerBall);
-    mainNode->addChild(centerNode);
-
-    Platform * platform = new Platform(10, 1, 1, QVector3D(width/2, 1, 0));
-    mainNode->addChild(platform->getNode());
-
-
-    //@todo move the complete brick generation to extra function?
-    int brick_width = 4;
-    int brick_height = 2;
-    int brick_offset_x = 2;
-    int brick_offset_y = 2;
-    int brick_amount_x = 14;
-    int brick_amount_y = 10;
-
-    int center_x = width / 2;
-    int center_y = height / 2;
-    int offset_center_x = center_x - (brick_amount_x / 2 * (brick_width + brick_offset_x)) + 2; //the bricks should be centered
-
-    int x_position;
-    int y_position;
-
-    std::vector<Brick *> bricks;
-    bricks.reserve(brick_amount_x * brick_amount_y);
-
-    Color* color;
-    for (unsigned j = 0; j < brick_amount_y; j++) {
-        for (unsigned i = 0; i < brick_amount_x; i++) {
-
-            x_position = offset_center_x + (i * brick_width) + (i * brick_offset_x);
-            y_position = center_y + (j * brick_height) + (j * brick_offset_y);
-
-            Brick * brick = new Brick(4, 2, 2, QVector3D(x_position, y_position, 0));
-            color = brick->getProperty<Color>();
-            color->setValue(1.0f, 1.0f * (1.f - (float)j/(brick_amount_y -1.f)),0); //Color gradient yellow to red
-            bricks.push_back(brick);
-            mainNode->addChild(brick->getNode());
-        }
-    }
-
-
-
-    return mainNode;
-}
+} 
