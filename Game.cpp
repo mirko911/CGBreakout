@@ -2,6 +2,7 @@
 
 #include "scenemanager.h"
 #include "FixedCamera.h"
+#include "color.h"
 
 
 Game::Game(Settings &settings) : IdleObserver(0), settings(settings) {
@@ -177,6 +178,8 @@ void Game::doIt()
 void Game::onBrickCollision(Brick *brick) {
     brick->decreaseHealth(100);
     ItemDropBall * dropBall = new ItemDropBall(brick->getPosition());
+    Color * color = dropBall->getProperty<Color>();
+    color->setValue(255,255,0);
     itemDrops.push_back(dropBall);
     gameSceneRootNode->addChild(dropBall->getNode());
 }
@@ -199,7 +202,7 @@ void Game::onItemDropCatch(ItemDrop &itemDrop) {
     }
     case ITEM_ROTATECAM: {
         Camera *cam = SceneManager::instance()->getActiveContext()->getCamera();
-        cam->rotate(0, 180, 0);
+        //cam->rotate(0, 180, 0);
         break;
     }
     }

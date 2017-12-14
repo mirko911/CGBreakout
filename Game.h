@@ -36,15 +36,6 @@ struct Settings {
 class Game : public IdleObserver
 {
 private:
-<<<<<<< HEAD
-	Settings settings;
-	KeyboardInput *keyboard_input;
-	std::vector<Ball*> balls;
-	std::vector<Brick*> bricks;
-	Platform * platform;
-	QVector3D center;
-	int lives;
-=======
     Settings settings;
     KeyboardInput *keyboard_input;
     std::vector<Ball*> balls;
@@ -57,7 +48,6 @@ private:
     Node * gameSceneRootNode;
     void onBrickCollision(Brick* brick);
     void onItemDropCatch(ItemDrop &itemDrop);
->>>>>>> origin/dev
 public:
 	Game(Settings &settings);
 	Node * initStartScene();
