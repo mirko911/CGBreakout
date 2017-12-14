@@ -8,10 +8,10 @@
 class FixedCamera : public ControllableCamera
 {
 private:
-	bool executed = false;
+    bool executed = false;
     bool modify_cam = false;
 public:
-	virtual void doIt() override;
+    virtual void doIt() override;
 };
 
 

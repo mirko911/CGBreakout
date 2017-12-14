@@ -8,7 +8,8 @@ void FixedCamera::doIt()
     if (keyIn->isKeyPressed('m'))
     {
         modify_cam = true;
-    }else if(keyIn->isKeyPressed('b')){
+    }
+    else if (keyIn->isKeyPressed('b')) {
         CamData data = getCamData();
         int x = 0; //Set breakpoint here to get the CamData Struct
         x++; //Needed to avoid the unused var warning
@@ -16,13 +17,13 @@ void FixedCamera::doIt()
 
 
 
-    if(modify_cam){
+    if (modify_cam) {
         ControllableCamera::doIt();
     }
 
-	//Set position once
+    //Set position once
     if (!executed) {
         setPosition(45, 33, 56);
         executed = true;
-	}
+    }
 }

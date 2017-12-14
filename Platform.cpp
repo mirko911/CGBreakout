@@ -3,7 +3,7 @@
 
 
 Platform::Platform(const float width, const float height, const float depth, const QVector3D position)
-	: GameObject(position, new SimpleCube(width, height, depth)), width(width), height(height), depth(depth)
+    : GameObject(position, new SimpleCube(width, height, depth)), width(width), height(height), depth(depth)
 {
     setPosition(position);
 
@@ -11,23 +11,23 @@ Platform::Platform(const float width, const float height, const float depth, con
 
 void Platform::setVelocity(const float _velocity)
 {
-	velocity = _velocity;
+    velocity = _velocity;
 }
 
 float Platform::getVelocity() const
 {
-	return velocity;
+    return velocity;
 }
 
 void Platform::moveLeft()
 {
-	position.setX(position.x() - velocity);
-	setPosition(position);
+    position.setX(position.x() - velocity);
+    setPosition(position);
 }
 
 void Platform::moveRight()
 {
-	position.setX(position.x() + velocity);
-	setPosition(position);
+    position.setX(position.x() + velocity);
+    setPosition(position);
 }
 

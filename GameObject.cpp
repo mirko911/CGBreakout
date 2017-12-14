@@ -20,7 +20,7 @@ void GameObject::setPosition(const QVector3D _position)
 
 void GameObject::setPosition(const float x, const float y, const float z)
 {
-	position = QVector3D(x,y,z);
+	position = QVector3D(x, y, z);
 	transformation->resetTrafo();
 	transformation->translate(x, y, z);
 }
