@@ -89,6 +89,12 @@ void Game::doIt()
 
         bool foundColission = false;
         for (Brick * brick : bricks) {
+
+            //Skip invisible bricks
+            if (!brick->isVisible()) {
+                continue;
+            };
+
             // Check collission between ball and horizontal brick sides
             if ((newPosition.x() + ball->getRadius() >= brick->getPosition().x() - settings.brick_width / 2) &&
                 (newPosition.x() - ball->getRadius() <= brick->getPosition().x() + settings.brick_width / 2) &&
@@ -96,6 +102,7 @@ void Game::doIt()
                 (newPosition.y() - ball->getRadius() <= brick->getPosition().y() + settings.brick_height / 2))
             {
                 ball->setDirection(ball->hit(QVector3D(1, 0, 0)));
+                brick->decreaseHealth(100);
                 foundColission = true;
                 break;
             }
@@ -107,6 +114,7 @@ void Game::doIt()
                 (newPosition.x() - ball->getRadius() <= brick->getPosition().x() + settings.brick_width / 2))
             {
                 ball->setDirection(ball->hit(QVector3D(0, 1, 0)));
+                brick->decreaseHealth(100);
                 foundColission = true;
                 break;
             }

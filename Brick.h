@@ -1,11 +1,10 @@
 #ifndef BRICK_H
 #define BRICK_H
 
-#include <qwidget.h>
-
 #include "drawable.h"
 #include "simplecube.h"
-#include "transformation.h"
+#include "color.h"
+
 
 #include "GameObject.h"
 
@@ -21,10 +20,13 @@ private:
     //Health of the brick
     float health;
     //Is the block visible?
-    bool isVisible;
+    bool visible;
 public:
 
     Brick(const float width, const float height, const float depth, const QVector3D position);
+    bool isVisible() const;
+    void setInvisible();
+    void decreaseHealth(const float ammount);
 };
 
 #endif // !BRICK_H
