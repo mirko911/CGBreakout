@@ -12,6 +12,7 @@
 #include "Ball.h"
 #include "Platform.h"
 #include "Brick.h"
+#include "ItemDrop.h"
 
 struct Settings {
 	int width;
@@ -35,6 +36,7 @@ struct Settings {
 class Game : public IdleObserver
 {
 private:
+<<<<<<< HEAD
 	Settings settings;
 	KeyboardInput *keyboard_input;
 	std::vector<Ball*> balls;
@@ -42,6 +44,20 @@ private:
 	Platform * platform;
 	QVector3D center;
 	int lives;
+=======
+    Settings settings;
+    KeyboardInput *keyboard_input;
+    std::vector<Ball*> balls;
+    std::vector<Brick*> bricks;
+    std::vector<ItemDrop> activeItemDrops;
+    std::vector<ItemDropBall*> itemDrops;
+    Platform * platform;
+    QVector3D center;
+    int lives;
+    Node * gameSceneRootNode;
+    void onBrickCollision(Brick* brick);
+    void onItemDropCatch(ItemDrop &itemDrop);
+>>>>>>> origin/dev
 public:
 	Game(Settings &settings);
 	Node * initStartScene();
