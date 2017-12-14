@@ -78,11 +78,11 @@ void Game::doIt()
             itemDrops.erase(itemDrops.begin() + i);
             continue;
         }
-        // Check collission between platform and bottom point of ball
-        else if ((newPosition.x() + ball->getRadius() >= platform->getPosition().x() - 10 / 2) &&
-            (newPosition.x() - ball->getRadius() <= platform->getPosition().x() + 10 / 2) &&
-            (newPosition.y() + ball->getRadius() >= platform->getPosition().y() - settings.brick_height / 4) &&
-            (newPosition.y() - ball->getRadius() <= platform->getPosition().y() + settings.brick_height / 4))
+        // Check collission between platform and bottom point of Item
+        else if ((newPosition.x() + ball->getRadius() >= platform->getPosition().x() - settings.platform_width / 2) &&
+            (newPosition.x() - ball->getRadius() <= platform->getPosition().x() + settings.platform_width / 2) &&
+            (newPosition.y() + ball->getRadius() >= platform->getPosition().y() - settings.platform_height / 2) &&
+            (newPosition.y() - ball->getRadius() <= platform->getPosition().y() + settings.platform_height / 2))
         {
             ball->setEnabled(false);
             itemDrops.erase(itemDrops.begin() + i);
@@ -107,13 +107,12 @@ void Game::doIt()
             continue;
         }
         // Check collission between platform and bottom point of ball
-        else if ((newPosition.x() + ball->getRadius() >= platform->getPosition().x() - 10 / 2) &&
-            (newPosition.x() - ball->getRadius() <= platform->getPosition().x() + 10 / 2) &&
-            (newPosition.y() + ball->getRadius() >= platform->getPosition().y() - settings.brick_height / 4) &&
-            (newPosition.y() - ball->getRadius() <= platform->getPosition().y() + settings.brick_height / 4))
+        else if ((newPosition.x() + ball->getRadius() >= platform->getPosition().x() - settings.platform_width / 2) &&
+            (newPosition.x() - ball->getRadius() <= platform->getPosition().x() + settings.platform_width / 2) &&
+            (newPosition.y() + ball->getRadius() >= platform->getPosition().y() - settings.platform_height / 2) &&
+            (newPosition.y() - ball->getRadius() <= platform->getPosition().y() + settings.platform_height / 2))
         {
             float platformHit = newPosition.x() - platform->getPosition().x();
-            std::cout << platformHit << std::endl;
             if(platformHit < -5 || platformHit < 5) {
                 platformHit = (int) platformHit;
             }
