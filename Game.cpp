@@ -68,72 +68,53 @@ void Game::doIt()
     for (Ball * ball : balls) {
         QVector3D newPosition = (ball->getPosition() + ball->getDirection() * 0.05);
 
+        //Check collision with walls
         if (newPosition.x() < 0 || newPosition.x() > settings.width) {
             ball->setDirection(ball->hit(QVector3D(0, 1, 0)));
+            continue;
         }
         else if (newPosition.y() < 0 || newPosition.y() > settings.height) {
             ball->setDirection(ball->hit(QVector3D(1, 0, 0)));
+            continue;
         }
-        else {
-            ball->setPosition(newPosition);
-        }
-    }
-
-    for (auto it = balls.begin(); it != balls.end(); )
-    //for (Ball * ball : balls)
-    {
-
-        QVector3D posBall = (*it)->getPosition();
-        float radiusBall = (*it)->getRadius();
-        for (auto br = bricks.begin(); br != bricks.end(); )
+        // Check collission between platform and bottom point of ball
+        else if ((newPosition.x() + ball->getRadius() >= platform->getPosition().x() - 10 / 2) &&
+            (newPosition.x() - ball->getRadius() <= platform->getPosition().x() + 10 / 2) &&
+            (newPosition.y() + ball->getRadius() >= platform->getPosition().y() - settings.brick_height / 4) &&
+            (newPosition.y() - ball->getRadius() <= platform->getPosition().y() + settings.brick_height / 4))
         {
-            QVector3D posBrick = (*br)->getPosition();
+            ball->setDirection(ball->hit(QVector3D(1, 0, 0)));
+            continue;
+        }
 
+        bool foundColission = false;
+        for (Brick * brick : bricks) {
             // Check collission between ball and horizontal brick sides
-            if ((posBall.x() >= posBrick.x() - settings.brick_width/2) && (posBall.x() <= posBrick.x() + settings.brick_width/2))
+            if ((newPosition.x() + ball->getRadius() >= brick->getPosition().x() - settings.brick_width / 2) &&
+                (newPosition.x() - ball->getRadius() <= brick->getPosition().x() + settings.brick_width / 2) &&
+                (newPosition.y() + ball->getRadius() >= brick->getPosition().y() - settings.brick_height / 2) &&
+                (newPosition.y() - ball->getRadius() <= brick->getPosition().y() + settings.brick_height / 2))
             {
-                if ((posBall.y() + radiusBall >= posBrick.y() - settings.brick_height/2) &&
-                        (posBall.y() - radiusBall <= posBrick.y() + settings.brick_height/2))
-                {
-                    (*it)->setDirection((*it)->hit(QVector3D(1, 0, 0)));
-                    posBall = (*it)->getDirection();
-                    //br = hitBrick(br);
-                    continue;
-                }
+                ball->setDirection(ball->hit(QVector3D(1, 0, 0)));
+                foundColission = true;
+                break;
             }
 
             // Check collission between ball and vertical brick sides
-            if (((*it)->getPosition().y() >= (*br)->getPosition().y() - settings.brick_height/2) &&
-                    ((*it)->getPosition().y() <= (*br)->getPosition().y() + settings.brick_height/2))
+            if ((newPosition.y() + ball->getRadius() >= brick->getPosition().y() - settings.brick_height / 2) &&
+                (newPosition.y() - ball->getRadius() <= brick->getPosition().y() + settings.brick_height / 2) &&
+                (newPosition.x() + ball->getRadius() >= brick->getPosition().x() - settings.brick_width / 2) &&
+                (newPosition.x() - ball->getRadius() <= brick->getPosition().x() + settings.brick_width / 2))
             {
-                //if (((*it)->getPosition().x() + (*it)->getRadius() >= (*br)->getPosition().x() - settings.brick_width/2) &&
-                        //((*it)->getPosition().x() - (*it)->getRadius() <= (*br)->getPosition().x() + settings.brick_width/2))
-                if ((posBall.x() + radiusBall >= (*br)->getPosition().x() - settings.brick_width/2) &&
-                        (posBall.x() - radiusBall <= (*br)->getPosition().x() + settings.brick_width/2))
-                {
-                    (*it)->setDirection((*it)->hit(QVector3D(0, 1, 0)));
-                    posBall = (*it)->getDirection();
-                    //br = hitBrick(br);
-                    continue;
-                }
-            }
-            ++br;
-        }
-
-        // Check collission between platform and bottom point of ball
-        if ((posBall.x() + radiusBall >= platform->getPosition().x() - platform->getWidth()/2) &&
-                (posBall.x() - radiusBall <= platform->getPosition().x() + platform->getWidth()/2))
-        {
-            if ((posBall.y() + radiusBall >= platform->getPosition().y() - settings.brick_height/4) &&
-                    (posBall.y() - radiusBall <= platform->getPosition().y() + settings.brick_height/4))
-            {
-                (*it)->setDirection((*it)->hit(QVector3D(1, 0, 0)));
-                (*it)->setPosition(posBall.x() + 0.1, posBall.y() + 0.1, 0);
-                continue;
+                ball->setDirection(ball->hit(QVector3D(0, 1, 0)));
+                foundColission = true;
+                break;
             }
         }
-        ++it;
 
+        if (!foundColission) {
+            ball->setPosition(newPosition);
+        }
     }
 
     if (keyboard_input->isKeyPressed('a') && platform->getPosition().x() > 0) {
