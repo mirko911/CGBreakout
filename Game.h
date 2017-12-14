@@ -23,6 +23,7 @@ struct Settings {
     int brick_depth;
     int brick_offset_x;
     int brick_offset_y;
+    int ball_radius;
     int start_lives;
 };
 

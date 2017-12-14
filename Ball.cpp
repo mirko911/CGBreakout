@@ -22,3 +22,7 @@ void Ball::setDirection(const QVector3D _direction)
     direction = _direction;
 }
 
+float Ball::getRadius() const
+{
+    return radius;
+}

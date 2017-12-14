@@ -36,6 +36,7 @@ void SceneManager::initScenes()
     settings.brick_offset_x = 2;
     settings.brick_offset_y = 2;
     settings.start_lives = 3;
+    settings.ball_radius = 1;
 
     Game * game = new Game(settings);
 

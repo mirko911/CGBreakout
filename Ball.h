@@ -16,6 +16,7 @@ public:
     QVector3D hit(const QVector3D dir) const;
     QVector3D getDirection() const;
     void setDirection(const QVector3D _direction);
+    float getRadius() const;
 };
 
 #endif // !BALL_H
