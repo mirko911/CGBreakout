@@ -18,7 +18,7 @@ Node * Game::initGameScene()
     mainNode->addChild(ball->getNode());
     balls.push_back(ball);
 
-    platform = new Platform(10, 1, 1, QVector3D(center.x(), 1, 0));
+    platform = new Platform(settings.platform_width, settings.platform_height, settings.platform_depth, QVector3D(center.x(), 1, 0), settings.platform_velocity);
     mainNode->addChild(platform->getNode());
 
     int brick_width_with_offset = settings.brick_width + settings.brick_offset_x;
@@ -66,7 +66,7 @@ void Game::doIt()
 {
     //Calculate new ball positions
     for (Ball * ball : balls) {
-        QVector3D newPosition = (ball->getPosition() + ball->getDirection() * 0.05);
+        QVector3D newPosition = (ball->getPosition() + ball->getDirection() * settings.ball_velocity);
 
         //Check collision with walls
         if (newPosition.x() < 0 || newPosition.x() > settings.width) {
@@ -83,7 +83,16 @@ void Game::doIt()
             (newPosition.y() + ball->getRadius() >= platform->getPosition().y() - settings.brick_height / 4) &&
             (newPosition.y() - ball->getRadius() <= platform->getPosition().y() + settings.brick_height / 4))
         {
-            ball->setDirection(ball->hit(QVector3D(1, 0, 0)));
+            float platformHit = newPosition.x() - platform->getPosition().x();
+            std::cout << platformHit << std::endl;
+            if(platformHit < -5 || platformHit < 5) {
+                platformHit = (int) platformHit;
+            }
+            QVector3D direction = QVector3D(0 + platformHit / (platform->getWidth() / 2 + ball->getRadius()), 1 -  platformHit / (platform->getWidth() / 2 + ball->getRadius()), 0);
+            if(platformHit < 0) {
+                direction.setY(1 + platformHit / (platform->getWidth() / 2 + ball->getRadius()));
+            }
+            ball->setDirection(direction.normalized());
             continue;
         }
 

@@ -14,35 +14,40 @@
 #include "Brick.h"
 
 struct Settings {
-    int width;
-    int height;
-    int num_bricks_x;
-    int num_bricks_y;
-    int brick_width;
-    int brick_height;
-    int brick_depth;
-    int brick_offset_x;
-    int brick_offset_y;
+	int width;
+	int height;
+	int num_bricks_x;
+	int num_bricks_y;
+	int brick_width;
+	int brick_height;
+	int brick_depth;
+	int brick_offset_x;
+	int brick_offset_y;
+	int start_lives;
+    int platform_width;
+    int platform_height;
+    int platform_depth;
+    float platform_velocity;
     int ball_radius;
-    int start_lives;
+    float ball_velocity;
 };
 
 class Game : public IdleObserver
 {
 private:
-    Settings settings;
-    KeyboardInput *keyboard_input;
-    std::vector<Ball*> balls;
-    std::vector<Brick*> bricks;
-    Platform * platform;
-    QVector3D center;
-    int lives;
+	Settings settings;
+	KeyboardInput *keyboard_input;
+	std::vector<Ball*> balls;
+	std::vector<Brick*> bricks;
+	Platform * platform;
+	QVector3D center;
+	int lives;
 public:
-    Game(Settings &settings);
-    Node * initStartScene();
-    Node * initGameScene();
-    Node * initEndScene();
-    virtual void doIt() override;
+	Game(Settings &settings);
+	Node * initStartScene();
+	Node * initGameScene();
+	Node * initEndScene();
+	virtual void doIt() override;
 };
 
 

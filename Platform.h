@@ -9,19 +9,20 @@
 #include <iostream>
 
 class Platform :
-    public GameObject
+	public GameObject
 {
 private:
-    float width;
-    float height;
-    float depth;
-    float velocity = 0.2f;
+	float width;
+	float height;
+	float depth;
+    float velocity;
 public:
-    Platform(const float width, const float height, const float depth, const QVector3D position);
+    Platform(const float width, const float height, const float depth, const QVector3D position, const float velocity);
     void setVelocity(const float _velocity);
     float getVelocity() const;
-    void moveLeft();
-    void moveRight();
+	void moveLeft();
+	void moveRight();
+    float getWidth() const;
 };
 
 #endif // !PLATFORM_H

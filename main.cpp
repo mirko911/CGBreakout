@@ -25,18 +25,23 @@ Node *initScene1();
 
 void SceneManager::initScenes()
 {
-    Settings settings;
-    settings.width = 90;
-    settings.height = 70;
-    settings.brick_height = 2;
-    settings.brick_width = 4;
-    settings.brick_depth = 2;
-    settings.num_bricks_x = 14;
-    settings.num_bricks_y = 10;
-    settings.brick_offset_x = 2;
-    settings.brick_offset_y = 2;
-    settings.start_lives = 3;
+	Settings settings;
+	settings.width = 90;
+	settings.height = 70;
+	settings.brick_height = 2;
+	settings.brick_width = 4;
+	settings.brick_depth = 2;
+	settings.num_bricks_x = 14;
+	settings.num_bricks_y = 10;
+	settings.brick_offset_x = 2;
+	settings.brick_offset_y = 2;
+	settings.start_lives = 3;
+    settings.platform_width = 10;
+    settings.platform_height = 1;
+    settings.platform_depth = 1;
+    settings.platform_velocity = 0.1f;
     settings.ball_radius = 1;
+    settings.ball_velocity = 0.05f;
 
     Game * game = new Game(settings);
 
@@ -53,4 +58,4 @@ void SceneManager::initScenes()
     SceneManager::instance()->getActiveContext()->setCamera(cam);
 
     //SceneManager::instance()->setFullScreen();
-}
+} 
