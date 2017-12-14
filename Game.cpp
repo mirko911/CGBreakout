@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include "scenemanager.h"
+#include "FixedCamera.h"
 
 
 Game::Game(Settings &settings) : IdleObserver(0), settings(settings) {
@@ -45,7 +47,7 @@ Node * Game::initGameScene()
         }
     }
 
-
+    gameSceneRootNode = mainNode;
     return mainNode;
 }
 
@@ -64,6 +66,32 @@ Node * Game::initEndScene()
 
 void Game::doIt()
 {
+    //Render new positions of itemdrops
+    int i = -1; //Start with -1, because I don't know where the loop ends
+    for (ItemDropBall *ball : itemDrops) {
+        i++;
+        QVector3D newPosition = (ball->getPosition() + ball->getDirection() * 0.05);
+
+        if (newPosition.y() < 0) {
+            ball->setEnabled(false);
+            itemDrops.erase(itemDrops.begin() + i);
+            continue;
+        }
+        // Check collission between platform and bottom point of ball
+        else if ((newPosition.x() + ball->getRadius() >= platform->getPosition().x() - 10 / 2) &&
+            (newPosition.x() - ball->getRadius() <= platform->getPosition().x() + 10 / 2) &&
+            (newPosition.y() + ball->getRadius() >= platform->getPosition().y() - settings.brick_height / 4) &&
+            (newPosition.y() - ball->getRadius() <= platform->getPosition().y() + settings.brick_height / 4))
+        {
+            ball->setEnabled(false);
+            itemDrops.erase(itemDrops.begin() + i);
+            onItemDropCatch(ball->getItemDrop());
+            continue;
+        }
+
+        ball->setPosition(newPosition);
+    }
+
     //Calculate new ball positions
     for (Ball * ball : balls) {
         QVector3D newPosition = (ball->getPosition() + ball->getDirection() * 0.05);
@@ -102,7 +130,7 @@ void Game::doIt()
                 (newPosition.y() - ball->getRadius() <= brick->getPosition().y() + settings.brick_height / 2))
             {
                 ball->setDirection(ball->hit(QVector3D(1, 0, 0)));
-                brick->decreaseHealth(100);
+                onBrickCollision(brick);
                 foundColission = true;
                 break;
             }
@@ -114,7 +142,7 @@ void Game::doIt()
                 (newPosition.x() - ball->getRadius() <= brick->getPosition().x() + settings.brick_width / 2))
             {
                 ball->setDirection(ball->hit(QVector3D(0, 1, 0)));
-                brick->decreaseHealth(100);
+                onBrickCollision(brick);
                 foundColission = true;
                 break;
             }
@@ -131,5 +159,40 @@ void Game::doIt()
     else if (keyboard_input->isKeyPressed('d') && platform->getPosition().x() < settings.width) {
         platform->moveRight();
     }
+    else if (keyboard_input->isKeyPressed('t')) {
+        int x = 0;
+        x++;
+    }
+}
 
+void Game::onBrickCollision(Brick *brick) {
+    brick->decreaseHealth(100);
+    ItemDropBall * dropBall = new ItemDropBall(brick->getPosition());
+    itemDrops.push_back(dropBall);
+    gameSceneRootNode->addChild(dropBall->getNode());
+}
+
+void Game::onItemDropCatch(ItemDrop &itemDrop) {
+    activeItemDrops.push_back(itemDrop);
+    switch (itemDrop.getType()) {
+    case ITEM_EXTRABALL: {
+
+        Ball * ball = new Ball(settings.ball_radius, QVector3D(getRandomNumber() % settings.width, 3, 0), QVector3D(0, -1, 0));
+        balls.push_back(ball);
+        gameSceneRootNode->addChild(ball->getNode());
+        break;
+    }
+    case ITEM_SPEED: {
+        for (Ball *ball : balls) {
+            //@todo implement
+        }
+        break;
+    }
+    case ITEM_ROTATECAM: {
+        Camera *cam = SceneManager::instance()->getActiveContext()->getCamera();
+        cam->rotate(0, 180, 0);
+        break;
+    }
+    }
+    std::cout << "Got ItemDrop Type:" << itemDrop.getType() << std::endl;
 }
