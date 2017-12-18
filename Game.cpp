@@ -19,7 +19,7 @@ Node * Game::initGameScene()
 {
     Node * mainNode = new Node();
 
-    Ball * ball = new Ball(settings.ball_radius, QVector3D(30, 3, 0), settings.ball_velocity, QVector3D(0, -1, 0));
+    Ball * ball = new Ball(settings.ball_radius, QVector3D(30, 3, 0), settings.ball_velocity, QVector3D(0, 1, 0));
     mainNode->addChild(ball->getNode());
     balls.push_back(ball);
 
@@ -69,6 +69,11 @@ Node * Game::initEndScene()
 
 void Game::doIt()
 {
+    if (lives <= 0) {
+        //Game is over
+        return;
+    }
+
     int i = 0;
     for (ItemDrop &drop : activeItemDrops) {
         if (drop.isTimeLimitReached()) {
@@ -107,6 +112,7 @@ void Game::doIt()
     }
 
     //Calculate new ball positions
+    i = 0;
     for (Ball * ball : balls) {
         QVector3D newPosition = (ball->getPosition() + ball->getDirection() * settings.ball_velocity);
 
@@ -115,9 +121,13 @@ void Game::doIt()
             ball->setDirection(ball->hit(QVector3D(0, 1, 0)));
             continue;
         }
-        else if (newPosition.y() < 0 || newPosition.y() > settings.height) {
+        else if (/*newPosition.y() < 0 || */ newPosition.y() > settings.height) {
             ball->setDirection(ball->hit(QVector3D(1, 0, 0)));
             continue;
+        }
+        else if (newPosition.y() < 0) {
+            ball->setEnabled(0);
+            balls.erase(balls.begin() + i);
         }
         // Check collission between platform and bottom point of ball
         else if ((newPosition.x() + ball->getRadius() >= platform->getPosition().x() - settings.platform_width / 2) &&
@@ -173,6 +183,17 @@ void Game::doIt()
         if (!foundColission) {
             ball->setPosition(newPosition);
         }
+    }
+
+    if (balls.empty() && lives > 0) {
+        lives--;
+        Ball * ball = new Ball(settings.ball_radius, QVector3D(30, 3, 0), settings.ball_velocity, QVector3D(0, 1, 0));
+        gameSceneRootNode->addChild(ball->getNode());
+        balls.push_back(ball);
+    }
+    else if (balls.empty() && lives <= 0) {
+        std::cout << "GAME OVER!" << std::endl;
+        return;
     }
 
     if (keyboard_input->isKeyPressed('a') && platform->getPosition().x() > 0) {
