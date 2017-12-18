@@ -1,9 +1,8 @@
 #ifndef BALL_H
 #define BALL_H
 
-#include "simplesphere.h"
-
 #include "GameObject.h"
+#include "GeometryHandler.h"
 
 class Ball : public GameObject
 {

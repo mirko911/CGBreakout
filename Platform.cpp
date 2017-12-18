@@ -1,9 +1,7 @@
 #include "Platform.h"
 
-
-
 Platform::Platform(const float width, const float height, const float depth, const QVector3D position, const float velocity)
-    : GameObject(position, new SimpleCube(width, height, depth)), width(width), height(height), depth(depth), velocity(velocity)
+    : GameObject(position, GeometryHandler::instance().getGeometry("platform")) , width(width), height(height), depth(depth), velocity(velocity)
 {
     setPosition(position);
 }

@@ -3,8 +3,7 @@
 
 
 #include "GameObject.h"
-
-#include "simplecube.h"
+#include "GeometryHandler.h"
 
 #include <iostream>
 

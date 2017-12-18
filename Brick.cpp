@@ -1,8 +1,7 @@
 #include "Brick.h"
 
-
 Brick::Brick(const float width, const float height, const float depth, const QVector3D position) :
-    GameObject(position, new SimpleCube(width, height, depth)),
+    GameObject(position, GeometryHandler::instance().getGeometry("brick")),
     width(width), height(height), depth(depth), health(100),
     visible(true)
 {

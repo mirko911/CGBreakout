@@ -29,19 +29,5 @@ public:
     int getTimer() const;
 };
 
-class ItemDropBall : public Ball {
-private:
-    ItemDrop itemDrop;
-public:
-    ItemDropBall(QVector3D position) :
-        Ball(1, position, 1, QVector3D(0, -1, 0)), itemDrop(ItemDrop::spawnRandomItemDrop())
-    {
-
-    };
-
-    ItemDrop& getItemDrop() {
-        return itemDrop;
-    }
-};
 
 #endif // !ITEMDROP_H

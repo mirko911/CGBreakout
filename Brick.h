@@ -1,12 +1,10 @@
 #ifndef BRICK_H
 #define BRICK_H
 
-#include "drawable.h"
-#include "simplecube.h"
 #include "color.h"
-
-
 #include "GameObject.h"
+#include "GeometryHandler.h"
+
 
 class Brick : public GameObject
 {

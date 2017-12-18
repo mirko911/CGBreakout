@@ -32,7 +32,9 @@ SOURCES += \
     Platform.cpp \
     FixedCamera.cpp \
     Game.cpp \
-    ItemDrop.cpp
+    ItemDrop.cpp \
+    GeometryHandler.cpp \
+    ItemDropDrawable.cpp
 
 HEADERS += \
     Brick.h \
@@ -41,7 +43,9 @@ HEADERS += \
     Platform.h \
     FixedCamera.h \
     Game.h \
-    ItemDrop.h
+    ItemDrop.h \
+    GeometryHandler.h \
+    ItemDropDrawable.h
 
 FORMS += \
     dockwidget.ui

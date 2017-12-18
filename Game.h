@@ -10,6 +10,8 @@
 #include "color.h"
 #include "window.h"
 
+#include "GeometryHandler.h"
+#include "ItemDropDrawable.h"
 #include "Ball.h"
 #include "Platform.h"
 #include "Brick.h"
@@ -43,7 +45,7 @@ private:
     std::vector<Ball*> balls;
     std::vector<Brick*> bricks;
     std::vector<ItemDrop> activeItemDrops;
-    std::vector<ItemDropBall*> itemDrops;
+    std::vector<ItemDropDrawable*> itemDrops;
     Platform * platform;
     QVector3D center;
     int lives;

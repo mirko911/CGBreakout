@@ -51,7 +51,7 @@ void SceneManager::initScenes()
 
     unsigned int myContextNr = SceneManager::instance()->addContext(myContext);
     unsigned int myScene = SceneManager::instance()->addScene(game->initGameScene());
-    ScreenRenderer *myRenderer = new ScreenRenderer(myContextNr, myScene);
+    /*ScreenRenderer *myRenderer =*/ new ScreenRenderer(myContextNr, myScene);
 
     //Vorsicht: Die Szene muss initialisiert sein, bevor das Fenster verändert wird (Fullscreen)
     SceneManager::instance()->setActiveScene(myScene);

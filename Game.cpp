@@ -1,5 +1,8 @@
 #include "Game.h"
 
+#include "trianglemesh.h"
+#include "simplecube.h"
+#include "simplesphere.h"
 #include "scenemanager.h"
 #include "FixedCamera.h"
 #include "color.h"
@@ -17,6 +20,15 @@ Game::Game(Settings &settings) : IdleObserver(0), settings(settings) {
 
 Node * Game::initGameScene()
 {
+    GeometryHandler &geometryHandler = GeometryHandler::instance();
+    geometryHandler.addGeometry("pokeball", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/pokeball.obj")));
+    geometryHandler.addGeometry("ball", new SimpleSphere(settings.ball_radius));
+    geometryHandler.addGeometry("platform", new SimpleCube(settings.platform_width, settings.platform_height, settings.platform_depth));
+    geometryHandler.addGeometry("platform_wide", new SimpleCube(settings.platform_width * 2, settings.platform_height, settings.platform_depth));
+    geometryHandler.addGeometry("brick", new SimpleCube(settings.brick_width, settings.brick_height, settings.brick_depth));
+    geometryHandler.addGeometry("heart", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/heart.obj")));
+    geometryHandler.addGeometry("x2", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/x2.obj")));
+
     Node * mainNode = new Node();
 
     Ball * ball = new Ball(settings.ball_radius, QVector3D(30, 3, 0), settings.ball_velocity, QVector3D(0, 1, 0));
@@ -50,6 +62,7 @@ Node * Game::initGameScene()
         }
     }
 
+
     gameSceneRootNode = mainNode;
     return mainNode;
 }
@@ -75,9 +88,10 @@ void Game::doIt()
     }
 
     int i = 0;
+
+    //Loop through all active item drops [wide_platform,speed,score]
     for (ItemDrop &drop : activeItemDrops) {
         if (drop.isTimeLimitReached()) {
-
             onItemDropLimitReached(drop);
             activeItemDrops.erase(activeItemDrops.begin() + i);
         }
@@ -87,33 +101,34 @@ void Game::doIt()
 
     //Render new positions of itemdrops
     i = -1; //Start with -1, because I don't know where the loop ends
-    for (ItemDropBall *ball : itemDrops) {
+    for (ItemDropDrawable *itemDropDrawable : itemDrops) {
         i++;
-        QVector3D newPosition = (ball->getPosition() + ball->getDirection() * 0.05);
+        QVector3D newPosition = (itemDropDrawable->getPosition() + QVector3D(0,-1,0) * 0.05);
 
         if (newPosition.y() < 0) {
-            ball->setEnabled(false);
+            itemDropDrawable->setEnabled(false);
             itemDrops.erase(itemDrops.begin() + i);
             continue;
         }
         // Check collission between platform and bottom point of Item
-        else if ((newPosition.x() + ball->getRadius() >= platform->getPosition().x() - settings.platform_width / 2) &&
-            (newPosition.x() - ball->getRadius() <= platform->getPosition().x() + settings.platform_width / 2) &&
-            (newPosition.y() + ball->getRadius() >= platform->getPosition().y() - settings.platform_height / 2) &&
-            (newPosition.y() - ball->getRadius() <= platform->getPosition().y() + settings.platform_height / 2))
+        else if ((newPosition.x() + 1 >= platform->getPosition().x() - settings.platform_width / 2) &&
+            (newPosition.x() -1 <= platform->getPosition().x() + settings.platform_width / 2) &&
+            (newPosition.y() + 1 >= platform->getPosition().y() - settings.platform_height / 2) &&
+            (newPosition.y() - 1 <= platform->getPosition().y() + settings.platform_height / 2))
         {
-            ball->setEnabled(false);
+            itemDropDrawable->setEnabled(false);
             itemDrops.erase(itemDrops.begin() + i);
-            onItemDropCatch(ball->getItemDrop());
+            onItemDropCatch(itemDropDrawable->getItemDrop());
             continue;
         }
 
-        ball->setPosition(newPosition);
+        itemDropDrawable->setPosition(newPosition);
     }
 
     //Calculate new ball positions
-    i = 0;
+    i = -1;
     for (Ball * ball : balls) {
+        i++;
         QVector3D newPosition = (ball->getPosition() + ball->getDirection() * settings.ball_velocity);
 
         //Check collision with walls
@@ -212,30 +227,56 @@ void Game::onBrickCollision(Brick *brick) {
     brick->decreaseHealth(100);
     score += (score_multiplicator * 5);
    // std::cout << "Score: " + score << " " << "Lives: " + lives << std::endl;
-    ItemDropBall * dropBall = new ItemDropBall(brick->getPosition());
-    Color * color = dropBall->getProperty<Color>();
-    color->setValue(255, 255, 0);
-    itemDrops.push_back(dropBall);
-    gameSceneRootNode->addChild(dropBall->getNode());
+
+    ItemDrop drop = ItemDrop::spawnRandomItemDrop();
+    ItemDropDrawable * itemDropDrawable;
+    switch (drop.getType()) {
+    case ITEM_EXTRALIVE:{
+        itemDropDrawable = new ItemDropDrawable(brick->getPosition(), GeometryHandler::instance().getGeometry("heart"), drop);
+        Color * color = itemDropDrawable->getProperty<Color>();
+        color->setValue(1, 0, 0);
+        break;}
+    case ITEM_SCORE:{
+        itemDropDrawable = new ItemDropDrawable(brick->getPosition(), GeometryHandler::instance().getGeometry("x2"), drop);
+        Color * color = itemDropDrawable->getProperty<Color>();
+        color->setValue(1, 1, 1);
+        break;}
+    case ITEM_EXTRABALL:{
+        itemDropDrawable = new ItemDropDrawable(brick->getPosition(), GeometryHandler::instance().getGeometry("ball"), drop);
+        Color * color = itemDropDrawable->getProperty<Color>();
+        color->setValue(1, 1, 0);
+        break;}
+    default:{
+        itemDropDrawable = new ItemDropDrawable(brick->getPosition(), GeometryHandler::instance().getGeometry("ball"), drop);
+        Color * color = itemDropDrawable->getProperty<Color>();
+        color->setValue(1, 0, 0);
+        break;
+    }
+    }
+
+    itemDrops.push_back(itemDropDrawable);
+    gameSceneRootNode->addChild(itemDropDrawable->getNode());
 }
 
 void Game::onItemDropCatch(ItemDrop &itemDrop) {
-    activeItemDrops.push_back(itemDrop);
+    //Only push the item drop into the list when the drop has a limited time
     switch (itemDrop.getType()) {
     case ITEM_SPEED: {
         for (Ball *ball : balls) {
             ball->setVelocity(settings.ball_velocity * 2);
         }
+        activeItemDrops.push_back(itemDrop);
         break;
     }
     case ITEM_WIDEPLATFORM: {
-        Geometry * geometry = new SimpleCube(settings.platform_width * 2, settings.platform_height, settings.platform_depth);
-        platform->setProperty<Geometry>(geometry);
+        platform->setProperty<Geometry>(GeometryHandler::instance().getGeometry("platform_wide"));
+        activeItemDrops.push_back(itemDrop);
         break;
     }
 
     case ITEM_SCORE: {
         score_multiplicator = 2;
+        activeItemDrops.push_back(itemDrop);
         break;
     }
 
@@ -263,8 +304,7 @@ void Game::onItemDropLimitReached(ItemDrop & itemDrop)
         break;
     }
     case ITEM_WIDEPLATFORM: {
-        Geometry * geometry = new SimpleCube(settings.platform_width, settings.platform_height, settings.platform_depth);
-        platform->setProperty<Geometry>(geometry);
+        platform->setProperty<Geometry>(GeometryHandler::instance().getGeometry("platform"));
         break;
     }
     case ITEM_SCORE: {

@@ -1,7 +1,7 @@
 #include "Ball.h"
 
-
-Ball::Ball(const float radius, const QVector3D position, const float velocity, const QVector3D direction) : GameObject(position, new SimpleSphere(radius)),
+Ball::Ball(const float radius, const QVector3D position, const float velocity, const QVector3D direction) :
+    GameObject(position, GeometryHandler::instance().getGeometry("pokeball")),
 radius(radius), velocity(velocity), direction(direction)
 {
     setPosition(position);
