@@ -9,8 +9,8 @@ inline int getRandomNumber() {
     thread_local std::uniform_int_distribution<int> pick{ 0, 1000 };
     return pick(gen);
 }
-
-enum { ITEM_SPEED, ITEM_WIDEPLATFORM, ITEM_ROTATECAM, ITEM_EXTRABALL, ITEM_EXTRALIVE };
+//       CAR           PLATFORM         x2             Ball Symbol   Heart Symbol
+enum { ITEM_SPEED, ITEM_WIDEPLATFORM, ITEM_SCORE, ITEM_EXTRABALL, ITEM_EXTRALIVE };
 
 class ItemDrop {
 private:
@@ -25,6 +25,8 @@ public:
     float getDuration() const;
     float getValue() const;
     static ItemDrop spawnRandomItemDrop();
+    void increaseTimer();
+    int getTimer() const;
 };
 
 class ItemDropBall : public Ball {
@@ -32,7 +34,7 @@ private:
     ItemDrop itemDrop;
 public:
     ItemDropBall(QVector3D position) :
-        Ball(1, position, QVector3D(0, -1, 0)), itemDrop(ItemDrop::spawnRandomItemDrop())
+        Ball(1, position, 1, QVector3D(0, -1, 0)), itemDrop(ItemDrop::spawnRandomItemDrop())
     {
 
     };

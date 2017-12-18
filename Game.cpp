@@ -11,13 +11,15 @@ Game::Game(Settings &settings) : IdleObserver(0), settings(settings) {
     bricks.reserve(settings.num_bricks_x * settings.num_bricks_y);
     center = QVector3D(settings.width / 2.0f, settings.height / 2.0f, 0);
     lives = settings.start_lives;
+    score = 0;
+    score_multiplicator = settings.score_multiplicator;
 }
 
 Node * Game::initGameScene()
 {
     Node * mainNode = new Node();
 
-    Ball * ball = new Ball(settings.ball_radius, QVector3D(30, 3, 0), QVector3D(0, -1, 0));
+    Ball * ball = new Ball(settings.ball_radius, QVector3D(30, 3, 0), settings.ball_velocity, QVector3D(0, -1, 0));
     mainNode->addChild(ball->getNode());
     balls.push_back(ball);
 
@@ -67,8 +69,19 @@ Node * Game::initEndScene()
 
 void Game::doIt()
 {
+    int i = 0;
+    for (ItemDrop &drop : activeItemDrops) {
+        if (drop.isTimeLimitReached()) {
+
+            onItemDropLimitReached(drop);
+            activeItemDrops.erase(activeItemDrops.begin() + i);
+        }
+        drop.increaseTimer();
+        i++;
+    }
+
     //Render new positions of itemdrops
-    int i = -1; //Start with -1, because I don't know where the loop ends
+    i = -1; //Start with -1, because I don't know where the loop ends
     for (ItemDropBall *ball : itemDrops) {
         i++;
         QVector3D newPosition = (ball->getPosition() + ball->getDirection() * 0.05);
@@ -113,11 +126,11 @@ void Game::doIt()
             (newPosition.y() - ball->getRadius() <= platform->getPosition().y() + settings.platform_height / 2))
         {
             float platformHit = newPosition.x() - platform->getPosition().x();
-            if(platformHit < -5 || platformHit < 5) {
-                platformHit = (int) platformHit;
+            if (platformHit < -5 || platformHit < 5) {
+                platformHit = (int)platformHit;
             }
-            QVector3D direction = QVector3D(0 + platformHit / (platform->getWidth() / 2 + ball->getRadius()), 1 -  platformHit / (platform->getWidth() / 2 + ball->getRadius()), 0);
-            if(platformHit < 0) {
+            QVector3D direction = QVector3D(0 + platformHit / (platform->getWidth() / 2 + ball->getRadius()), 1 - platformHit / (platform->getWidth() / 2 + ball->getRadius()), 0);
+            if (platformHit < 0) {
                 direction.setY(1 + platformHit / (platform->getWidth() / 2 + ball->getRadius()));
             }
             ball->setDirection(direction.normalized());
@@ -176,9 +189,11 @@ void Game::doIt()
 
 void Game::onBrickCollision(Brick *brick) {
     brick->decreaseHealth(100);
+    score += (score_multiplicator * 5);
+   // std::cout << "Score: " + score << " " << "Lives: " + lives << std::endl;
     ItemDropBall * dropBall = new ItemDropBall(brick->getPosition());
     Color * color = dropBall->getProperty<Color>();
-    color->setValue(255,255,0);
+    color->setValue(255, 255, 0);
     itemDrops.push_back(dropBall);
     gameSceneRootNode->addChild(dropBall->getNode());
 }
@@ -186,24 +201,54 @@ void Game::onBrickCollision(Brick *brick) {
 void Game::onItemDropCatch(ItemDrop &itemDrop) {
     activeItemDrops.push_back(itemDrop);
     switch (itemDrop.getType()) {
-    case ITEM_EXTRABALL: {
+    case ITEM_SPEED: {
+        for (Ball *ball : balls) {
+            ball->setVelocity(settings.ball_velocity * 2);
+        }
+        break;
+    }
+    case ITEM_WIDEPLATFORM: {
+        Geometry * geometry = new SimpleCube(settings.platform_width * 2, settings.platform_height, settings.platform_depth);
+        platform->setProperty<Geometry>(geometry);
+        break;
+    }
 
-        Ball * ball = new Ball(settings.ball_radius, QVector3D(getRandomNumber() % settings.width, 3, 0), QVector3D(0, -1, 0));
+    case ITEM_SCORE: {
+        score_multiplicator = 2;
+        break;
+    }
+
+    case ITEM_EXTRABALL: {
+        Ball * ball = new Ball(settings.ball_radius, platform->getPosition(), settings.ball_velocity, QVector3D(0, -1, 0));
         balls.push_back(ball);
         gameSceneRootNode->addChild(ball->getNode());
         break;
     }
-    case ITEM_SPEED: {
-        for (Ball *ball : balls) {
-            //@todo implement
-        }
-        break;
-    }
-    case ITEM_ROTATECAM: {
-        Camera *cam = SceneManager::instance()->getActiveContext()->getCamera();
-        //cam->rotate(0, 180, 0);
+    case ITEM_EXTRALIVE: {
+        lives++;
         break;
     }
     }
     std::cout << "Got ItemDrop Type:" << itemDrop.getType() << std::endl;
+}
+
+void Game::onItemDropLimitReached(ItemDrop & itemDrop)
+{
+    switch (itemDrop.getType()) {
+    case ITEM_SPEED: {
+        for (Ball *ball : balls) {
+            ball->setVelocity(settings.ball_velocity);
+        }
+        break;
+    }
+    case ITEM_WIDEPLATFORM: {
+        Geometry * geometry = new SimpleCube(settings.platform_width, settings.platform_height, settings.platform_depth);
+        platform->setProperty<Geometry>(geometry);
+        break;
+    }
+    case ITEM_SCORE: {
+        score_multiplicator = settings.score_multiplicator;
+        break;
+    }
+    }
 }

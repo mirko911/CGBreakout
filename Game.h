@@ -8,6 +8,7 @@
 #include "idleobserver.h"
 #include "inputregistry.h"
 #include "color.h"
+#include "window.h"
 
 #include "Ball.h"
 #include "Platform.h"
@@ -31,6 +32,7 @@ struct Settings {
     float platform_velocity;
     int ball_radius;
     float ball_velocity;
+    int score_multiplicator;
 };
 
 class Game : public IdleObserver
@@ -45,9 +47,12 @@ private:
     Platform * platform;
     QVector3D center;
     int lives;
+    int score;
+    float score_multiplicator;
     Node * gameSceneRootNode;
     void onBrickCollision(Brick* brick);
     void onItemDropCatch(ItemDrop &itemDrop);
+    void onItemDropLimitReached(ItemDrop &itemDrop);
 public:
 	Game(Settings &settings);
 	Node * initStartScene();

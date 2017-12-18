@@ -28,8 +28,17 @@ float ItemDrop::getValue() const
 ItemDrop ItemDrop::spawnRandomItemDrop()
 {
     int type = getRandomNumber() % 5;
-    int duration = 600 + (getRandomNumber() % 20) * 60; //Something between 10 and 30 seconds
+    int duration = 10000 + (getRandomNumber() % 20) * 200; //Something between 10 and 30 seconds
     int value = 0;
-
     return ItemDrop(type, duration, value);
+}
+
+void ItemDrop::increaseTimer()
+{
+    timer++;
+}
+
+int ItemDrop::getTimer() const
+{
+    return timer;
 }

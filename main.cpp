@@ -42,6 +42,7 @@ void SceneManager::initScenes()
     settings.platform_velocity = 0.1f;
     settings.ball_radius = 1;
     settings.ball_velocity = 0.05f;
+    settings.score_multiplicator = 1.0f;
 
     Game * game = new Game(settings);
 
