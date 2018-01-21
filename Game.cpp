@@ -29,6 +29,17 @@ Node * Game::initGameScene()
     geometryHandler.addGeometry("heart", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/heart.obj")));
     geometryHandler.addGeometry("x2", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/x2.obj")));
 
+    geometryHandler.addGeometry("letter_0", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/letter_0.obj")));
+    geometryHandler.addGeometry("letter_1", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/letter_1.obj")));
+    geometryHandler.addGeometry("letter_2", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/letter_2.obj")));
+    geometryHandler.addGeometry("letter_3", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/letter_3.obj")));
+    geometryHandler.addGeometry("letter_4", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/letter_4.obj")));
+    geometryHandler.addGeometry("letter_5", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/letter_5.obj")));
+    geometryHandler.addGeometry("letter_6", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/letter_6.obj")));
+    geometryHandler.addGeometry("letter_7", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/letter_7.obj")));
+    geometryHandler.addGeometry("letter_8", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/letter_8.obj")));
+    geometryHandler.addGeometry("letter_9", new TriangleMesh(static_cast<QString>(SRCDIR) + static_cast<QString>("/obj/letter_9.obj")));
+
     Node * mainNode = new Node();
 
     Ball * ball = new Ball(settings.ball_radius, QVector3D(30, 3, 0), settings.ball_velocity, QVector3D(0, 1, 0));
@@ -62,7 +73,13 @@ Node * Game::initGameScene()
         }
     }
 
+    lives_hud = HUDElement(QVector3D(7, settings.height - 5, 0), 2);
+    lives_hud.setValue(lives);
+    mainNode->addChild(lives_hud.setup());
 
+    score_hud = HUDElement(QVector3D(settings.width - 10, settings.height - 5, 0), 5);
+    mainNode->addChild(score_hud.setup());
+  
     gameSceneRootNode = mainNode;
     return mainNode;
 }
@@ -202,6 +219,8 @@ void Game::doIt()
 
     if (balls.empty() && lives > 0) {
         lives--;
+        lives_hud.setValue(lives);
+
         Ball * ball = new Ball(settings.ball_radius, QVector3D(30, 3, 0), settings.ball_velocity, QVector3D(0, 1, 0));
         gameSceneRootNode->addChild(ball->getNode());
         balls.push_back(ball);
@@ -226,6 +245,7 @@ void Game::doIt()
 void Game::onBrickCollision(Brick *brick) {
     brick->decreaseHealth(100);
     score += (score_multiplicator * 5);
+    score_hud.setValue(score);
    // std::cout << "Score: " + score << " " << "Lives: " + lives << std::endl;
 
     ItemDrop drop = ItemDrop::spawnRandomItemDrop();
@@ -288,6 +308,7 @@ void Game::onItemDropCatch(ItemDrop &itemDrop) {
     }
     case ITEM_EXTRALIVE: {
         lives++;
+        lives_hud.setValue(lives);
         break;
     }
     }
