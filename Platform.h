@@ -22,6 +22,7 @@ public:
 	void moveLeft();
 	void moveRight();
     float getWidth() const;
+    void setWidth(float w);
 };
 
 #endif // !PLATFORM_H

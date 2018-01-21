@@ -111,8 +111,8 @@ void Game::doIt()
             continue;
         }
         // Check collission between platform and bottom point of Item
-        else if ((newPosition.x() + 1 >= platform->getPosition().x() - settings.platform_width / 2) &&
-            (newPosition.x() -1 <= platform->getPosition().x() + settings.platform_width / 2) &&
+        else if ((newPosition.x() + 1 >= platform->getPosition().x() - platform->getWidth() / 2) &&
+            (newPosition.x() -1 <= platform->getPosition().x() + platform->getWidth() / 2) &&
             (newPosition.y() + 1 >= platform->getPosition().y() - settings.platform_height / 2) &&
             (newPosition.y() - 1 <= platform->getPosition().y() + settings.platform_height / 2))
         {
@@ -145,8 +145,8 @@ void Game::doIt()
             balls.erase(balls.begin() + i);
         }
         // Check collission between platform and bottom point of ball
-        else if ((newPosition.x() + ball->getRadius() >= platform->getPosition().x() - settings.platform_width / 2) &&
-            (newPosition.x() - ball->getRadius() <= platform->getPosition().x() + settings.platform_width / 2) &&
+        else if ((newPosition.x() + ball->getRadius() >= platform->getPosition().x() - platform->getWidth() / 2) &&
+            (newPosition.x() - ball->getRadius() <= platform->getPosition().x() + platform->getWidth() / 2) &&
             (newPosition.y() + ball->getRadius() >= platform->getPosition().y() - settings.platform_height / 2) &&
             (newPosition.y() - ball->getRadius() <= platform->getPosition().y() + settings.platform_height / 2))
         {
@@ -156,7 +156,7 @@ void Game::doIt()
             }
             QVector3D direction = QVector3D(0 + platformHit / (platform->getWidth() / 2 + ball->getRadius()), 1 - platformHit / (platform->getWidth() / 2 + ball->getRadius()), 0);
             if (platformHit < 0) {
-                direction.setY(1 + platformHit / (platform->getWidth() / 2 + ball->getRadius()));
+                direction.setY(1 + (platformHit + platform->getWidth() / settings.platform_width) / (platform->getWidth() / 2 + ball->getRadius()));
             }
             ball->setDirection(direction.normalized());
             continue;
@@ -270,6 +270,7 @@ void Game::onItemDropCatch(ItemDrop &itemDrop) {
     }
     case ITEM_WIDEPLATFORM: {
         platform->setProperty<Geometry>(GeometryHandler::instance().getGeometry("platform_wide"));
+        platform->setWidth(settings.platform_width * 2);
         activeItemDrops.push_back(itemDrop);
         break;
     }
@@ -281,7 +282,7 @@ void Game::onItemDropCatch(ItemDrop &itemDrop) {
     }
 
     case ITEM_EXTRABALL: {
-        Ball * ball = new Ball(settings.ball_radius, platform->getPosition(), settings.ball_velocity, QVector3D(0, -1, 0));
+        Ball * ball = new Ball(settings.ball_radius, QVector3D(platform->getPosition().x(), platform->getPosition().y() + 1, 0), settings.ball_velocity, QVector3D(0, -1, 0));
         balls.push_back(ball);
         gameSceneRootNode->addChild(ball->getNode());
         break;
@@ -305,6 +306,7 @@ void Game::onItemDropLimitReached(ItemDrop & itemDrop)
     }
     case ITEM_WIDEPLATFORM: {
         platform->setProperty<Geometry>(GeometryHandler::instance().getGeometry("platform"));
+        platform->setWidth(settings.platform_width);
         break;
     }
     case ITEM_SCORE: {

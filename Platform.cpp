@@ -32,3 +32,8 @@ float Platform::getWidth() const
 {
     return width;
 }
+
+void Platform::setWidth(float w)
+{
+    width = w;
+}
