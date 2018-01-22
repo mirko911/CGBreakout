@@ -17,6 +17,7 @@
 #include "Brick.h"
 #include "ItemDrop.h"
 #include "HUDElement.h"
+#include "HUDHeart.h"
 
 struct Settings {
 	int width;
@@ -54,6 +55,7 @@ private:
     float score_multiplicator;
     HUDElement score_hud;
     HUDElement lives_hud;
+    HUDHeart * heart_hud;
     Node * gameSceneRootNode;
     void onBrickCollision(Brick* brick);
     void onItemDropCatch(ItemDrop &itemDrop);

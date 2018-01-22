@@ -42,19 +42,21 @@ Node * Game::initGameScene()
 
     Node * mainNode = new Node();
 
+    Color* color;
+
     Ball * ball = new Ball(settings.ball_radius, QVector3D(30, 3, 0), settings.ball_velocity, QVector3D(0, 1, 0));
     mainNode->addChild(ball->getNode());
     balls.push_back(ball);
 
     platform = new Platform(settings.platform_width, settings.platform_height, settings.platform_depth, QVector3D(center.x(), 1, 0), settings.platform_velocity);
+    color = platform->getProperty<Color>();
+    color->setValue(0, 0.6f, 0.1f);
     mainNode->addChild(platform->getNode());
 
     int brick_width_with_offset = settings.brick_width + settings.brick_offset_x;
     int brick_height_with_offset = settings.brick_height + settings.brick_offset_y;
 
     int offset_center_x = center.x() - (settings.num_bricks_x * brick_width_with_offset / 2) + 2; //the bricks should be centered
-
-    Color* color;
 
     float x_position, y_position;
     for (int j = 0; j < settings.num_bricks_y; j++) {
@@ -72,6 +74,10 @@ Node * Game::initGameScene()
             mainNode->addChild(brick->getNode());
         }
     }
+    heart_hud = new HUDHeart(QVector3D(4, settings.height - 5, 0), GeometryHandler::instance().getGeometry("heart"));
+    color = heart_hud->getProperty<Color>();
+    color->setValue(1, 0, 0);
+    mainNode->addChild(heart_hud->getNode());
 
     lives_hud = HUDElement(QVector3D(7, settings.height - 5, 0), 2);
     lives_hud.setValue(lives);
