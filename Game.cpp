@@ -105,6 +105,12 @@ Node * Game::initEndScene()
 
 void Game::doIt()
 {
+    if(keyboard_input->isKeyPressed(' ')){
+        running = true;
+    }
+    if(!running){
+        return;
+    }
     if (lives <= 0) {
         //Game is over
         return;
@@ -315,6 +321,9 @@ void Game::onItemDropCatch(ItemDrop &itemDrop) {
     }
     case ITEM_EXTRALIVE: {
         lives++;
+        if(lives > 5){
+            lives = 5;
+        }
         lives_hud.setValue(lives);
         break;
     }

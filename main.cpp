@@ -58,5 +58,5 @@ void SceneManager::initScenes()
     SceneManager::instance()->setActiveContext(myContextNr);
     SceneManager::instance()->getActiveContext()->setCamera(cam);
 
-    //SceneManager::instance()->setFullScreen();
+    SceneManager::instance()->setFullScreen();
 } 

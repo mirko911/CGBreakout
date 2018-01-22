@@ -23,7 +23,7 @@ void FixedCamera::doIt()
 
     //Set position once
     if (!executed) {
-        setPosition(45, -20, 85);
+        setPosition(45, 0, 60);
         rotate(0,-30,0);
         executed = true;
     }

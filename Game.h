@@ -60,6 +60,7 @@ private:
     void onBrickCollision(Brick* brick);
     void onItemDropCatch(ItemDrop &itemDrop);
     void onItemDropLimitReached(ItemDrop &itemDrop);
+    bool running = false;
 public:
 	Game(Settings &settings);
 	Node * initStartScene();
